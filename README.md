@@ -8,7 +8,7 @@ It is included in the `<cmath>` header as `std::erf`. Unfortunately, the inverse
 Here, the inverse `erfinv` is implemented such that
 `erfinv(erf(x)) = x`, where `x` is a real number in the inverval `[-1,1]`.
 
-I don't expect this to be optimal in any way, but it's good enough for many use cases.
+I don't expect this to be optimal in any way, but it's good enough for many use cases. Proper implementations use piecewise rational function approximations and the like.
 
 __C++14 is required__
 

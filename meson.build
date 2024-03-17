@@ -1,6 +1,13 @@
 project('erfinv', 'cpp',
   version : '0.1',
-  default_options : ['warning_level=3', 'cpp_std=c++14', 'optimization=3'])
+  default_options : ['warning_level=3', 'cpp_std=c++20', 'optimization=3'])
+
+compiler = meson.get_compiler('cpp')
+
+if compiler.get_id() == 'clang' or compiler.get_id() == 'armclang'
+  message('Adding parameters to relax constexpr restrictions on clang')
+  add_global_arguments(['-fconstexpr-steps=200000'], language : 'cpp')
+endif
 
 exe_verification = executable('verification', 'verification/main.cpp',
   install : true,
