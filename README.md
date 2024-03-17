@@ -1,9 +1,7 @@
 # erfinv_cpp
 Compute the inverse of the error function in C++.
 The error function `erf` is defined as
-$$
-\text{erf}(z) = \frac{2}{\sqrt{\pi}} \int_0^z e^{-t^2} \mathrm{d}t.
-$$
+$$\text{erf}(z) = \frac{2}{\sqrt{\pi}} \int_0^z e^{-t^2} \mathrm{d}t.$$
 
 It is included in the `<cmath>` header as `std:erf`. Unfortunately, the inverse is missing there.
 
@@ -19,9 +17,7 @@ Copy the `erfinv.hpp` header into your project.
 
 # Verification
 The significant digits have been verified by computing 
-$$
-    \text{n\_digits} = -\log_{10} \frac{\text{erf}(\text{erfinv}(x)) - x}{x}
-$$
+$$\text{n\_digits} = -\log_{10} \frac{\text{erf}(\text{erfinv}(x)) - x}{x}$$
 
 ![img](res/n_digits.png)
 
