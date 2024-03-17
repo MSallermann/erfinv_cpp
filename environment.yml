@@ -1,0 +1,9 @@
+name: erfinv_test_env
+channels:
+  - conda-forge
+
+dependencies:
+  - meson
+  - pkg-config
+  - cmake
+  - catch2
