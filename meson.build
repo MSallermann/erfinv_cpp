@@ -1,6 +1,6 @@
 project('erfinv', 'cpp',
   version : '0.1',
-  default_options : ['warning_level=3', 'cpp_std=c++11', 'optimization=3'])
+  default_options : ['warning_level=3', 'cpp_std=c++14', 'optimization=3'])
 
 tests = [
   ['Test', 'test/test.cpp'],
