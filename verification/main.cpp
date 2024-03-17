@@ -14,6 +14,7 @@ void report( double x, erfinv_func_t erfinv, std::ofstream & fstream )
 
     auto n_digits = -std::log10( std::abs( ( erf_inv - x ) / x ) + std::numeric_limits<double>::epsilon() );
 
+    fstream << std::setprecision( 16 );
     fstream << x << " " << inv << " " << erf_inv << " " << n_digits << "\n";
 
     std::cout << "erfinv(x)       " << inv << "\n";
@@ -24,7 +25,6 @@ void report( double x, erfinv_func_t erfinv, std::ofstream & fstream )
 
 int main()
 {
-
     std::ofstream f_series( "series.txt" );
     std::ofstream f_winitzki( "winitzki.txt" );
     std::ofstream f_full( "full.txt" );

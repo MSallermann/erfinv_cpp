@@ -2,9 +2,14 @@ project('erfinv', 'cpp',
   version : '0.1',
   default_options : ['warning_level=3', 'cpp_std=c++14', 'optimization=3'])
 
-exe = executable('verification', 'verification/main.cpp',
+exe_verification = executable('verification', 'verification/main.cpp',
   install : true,
   include_directories : '.'
+  )
+
+exe_benchmark= executable('bench', ['benchmark/main.cpp', 'benchmark/thirdparty/nanobench.cpp'],
+  install : true,
+  include_directories : ['.', './benchmark/thirdparty']
   )
 
 tests = [
