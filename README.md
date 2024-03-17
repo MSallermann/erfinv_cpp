@@ -17,7 +17,7 @@ Copy the `erfinv.hpp` header into your project.
 
 # Verification
 The significant digits have been verified by computing 
-$$\text{ndigits} = -\log_{10} \frac{\text{erf}(\text{erfinv}(x)) - x}{x}$$
+$$\text{ndigits} = -\log_{10} \left|\frac{\text{erf}(\text{erfinv}(x)) - x}{x}\right|$$
 
 ![img](res/n_digits.png)
 
