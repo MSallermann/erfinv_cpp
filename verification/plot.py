@@ -1,48 +1,50 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-data_series_5 = np.loadtxt("series_5.txt")
-data_series_10 = np.loadtxt("series_10.txt")
-data_series_15 = np.loadtxt("series_15.txt")
-data_series_20 = np.loadtxt("series_20.txt")
-data_winitzki = np.loadtxt("winitzki.txt")
-data_full = np.loadtxt("full.txt")
-data_lut = np.loadtxt("lut_100.txt")
 
-data_list = [
-    data_series_5,
-    data_series_10,
-    data_series_15,
-    data_series_20,
-    data_winitzki,
-    data_full,
-    # data_lut,
-]
-label_list = [
-    "erfinv_series<5>",
-    "erfinv_series<10>",
-    "erfinv_series<15>",
-    "erfinv_series<20>",
-    "erfinv_winitzki",
-    "erfinv",
-    # "erfinvLUT<100>",
-]
-for d, l in zip(data_list, label_list):
-    plt.plot(d[:, 0], d[:, -1], label=l)
+def add_plot_digits(data_file_name):
+    data = np.loadtxt(data_file_name)
+    x = data[:, 0]
+    n_digits = data[:, 3]
+    plt.plot(x, n_digits, label=data_file_name)
 
-plt.legend()
+
+def add_plot_erfinv(data_file_name):
+    data = np.loadtxt(data_file_name)
+    x = data[:, 0]
+    erfinv_x = data[:, 1]
+    plt.plot(x, erfinv_x, label=data_file_name)
+
+
+data_files = [
+    "series_5.txt",
+    "series_10.txt",
+    "newton.txt",
+    "series_10_1halley.txt",
+    "series_10_2halley.txt",
+    # "halley.txt",
+    # "series_15.txt",
+    # "series_20.txt",
+    # "winitzki.txt",
+    # "full.txt",
+    # "lut_100.txt",
+]
+
+for df in data_files:
+    add_plot_digits(df)
+
 plt.xlabel("x")
 plt.ylabel("n_digits")
-figname = "n_digits.png"
-print(f"Saving figure to {figname}")
-plt.savefig(figname, dpi=300)
+plt.legend()
+plt.savefig("n_digits.png", dpi=300)
+plt.show()
 
 plt.close()
-for d, l in zip(data_list, label_list):
-    plt.plot(d[:, 0], d[:, 1], label=l)
-figname = "erfinv.png"
-plt.legend()
+for df in data_files:
+    add_plot_erfinv(df)
+
 plt.xlabel("x")
-plt.ylabel("erfinv(x)")
-print(f"Saving figure to {figname}")
-plt.savefig(figname, dpi=300)
+plt.ylabel("erfinv")
+plt.legend()
+plt.show()
+plt.savefig("erfinv.png", dpi=300)

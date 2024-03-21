@@ -12,6 +12,7 @@ namespace detail
 
 constexpr double pi      = 3.14159265358979323846;
 constexpr double sqrt_pi = 1.77245385090551602729;
+constexpr double pi_3_2  = 5.56832799683170784528;
 
 template<typename T>
 constexpr T constexpr_pow( T x, int n )
@@ -99,11 +100,32 @@ template<typename T, int n_steps>
 T erfinv_newton( T x, T y )
 {
     // find the root of the function f(y) = x - erf( y )
-    for( size_t i = 0; i < n_steps; i++ )
+    for( int i = 0; i < n_steps; i++ )
     {
-        const auto f     = x - std::erf( y );
-        const auto df_dy = -erf_deriv( y ) + std::numeric_limits<T>::epsilon(); // guard against divide by zero
+        const T y2       = y * y;
+        const T erfy     = std::erf( y );
+        const T exp_m_y2 = std::exp( -y2 );
+        const T f        = x - erfy;
+        const T df_dy    = -2.0 / sqrt_pi * exp_m_y2;
         y -= f / df_dy;
+    }
+    return y;
+}
+
+template<typename T, int n_steps>
+T erfinv_halley( T x, T y )
+{
+    // find the root of the function f(y) = x - erf( y )
+    for( int i = 0; i < n_steps; i++ )
+    {
+        const T y2       = y * y;
+        const T erfy     = std::erf( y );
+        const T exp_m_y2 = std::exp( -y2 );
+        const T f        = x - erfy;
+        const T df_dy    = -2.0 / sqrt_pi * exp_m_y2;
+        const T df2_d2y  = 4.0 * exp_m_y2 * y / sqrt_pi;
+
+        y -= 2.0 * f * df_dy / ( 2 * df_dy * df_dy - f * df2_d2y );
     }
     return y;
 }
@@ -124,18 +146,26 @@ constexpr T erfinv( T x )
 
     T res{};
 
-    if( x > 0.7 || x < -0.7 )
+    // for |x| < 0.65 we use the taylor series
+    if( x < 0.65 && x > -0.65 )
     {
-        res = detail::erfinv_winitzki( x );
-        res = detail::erfinv_newton<T, 3>( x, res );
-        return res;
+        res = detail::erfinv_series<T, 10>( x );
+
+        // for |x| < 0.2 the taylor series alone is accurate enough
+        if( x < 0.2 && x > -0.2 )
+        {
+            return res;
+        }
+        else // else we apply one iteration of halleys method
+        {
+            return detail::erfinv_halley<T, 1>( x, res );
+        }
     }
 
-    res = detail::erfinv_series<T, 10>( x );
-    if( x < 0.2 && x > -0.2 )
-        return res;
-
-    return detail::erfinv_newton<T, 2>( x, res );
+    // fo |x| >= 0.65 we use winitzkis approximation with two iteration of halleys method
+    res = detail::erfinv_winitzki( x );
+    res = detail::erfinv_halley<T, 2>( x, res );
+    return res;
 }
 
 }; // namespace detail
