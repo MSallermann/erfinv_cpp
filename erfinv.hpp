@@ -10,9 +10,8 @@ namespace erfinv
 namespace detail
 {
 
-constexpr double pi      = 3.14159265358979323846;
-constexpr double sqrt_pi = 1.77245385090551602729;
-constexpr double pi_3_2  = 5.56832799683170784528;
+constexpr long double pi      = 3.1415926535897932384626433832795028841971693993751L;
+constexpr long double sqrt_pi = 1.7724538509055160272981674833411451827975494561224L;
 
 template<typename T>
 constexpr T constexpr_pow( T x, int n )
@@ -135,8 +134,8 @@ T erfinv_halley( T x, T y )
 template<typename T>
 constexpr T erfinv( T x )
 {
-    assert( x >= -1.0 );
-    assert( x <= 1.0 );
+    if( x > 1.0 || x < -1.0 )
+        return std::numeric_limits<T>::quiet_NaN();
 
     if( x == 1.0 )
         return std::numeric_limits<T>::infinity();
@@ -146,13 +145,13 @@ constexpr T erfinv( T x )
 
     T res{};
 
-    // for |x| < 0.65 we use the taylor series
-    if( x < 0.65 && x > -0.65 )
+    // for |x| < 0.6 we use the taylor series
+    if( x < 0.55 && x > -0.55 )
     {
         res = detail::erfinv_series<T, 10>( x );
 
-        // for |x| < 0.2 the taylor series alone is accurate enough
-        if( x < 0.2 && x > -0.2 )
+        // for |x| < 0.15 the taylor series alone is accurate enough
+        if( x < 0.125 && x > -0.125 )
         {
             return res;
         }
@@ -162,7 +161,7 @@ constexpr T erfinv( T x )
         }
     }
 
-    // fo |x| >= 0.65 we use winitzkis approximation with two iteration of halleys method
+    // fo |x| >= 0.6 we use winitzkis approximation with two iteration of halleys method
     res = detail::erfinv_winitzki( x );
     res = detail::erfinv_halley<T, 2>( x, res );
     return res;
